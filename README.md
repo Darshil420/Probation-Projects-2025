@@ -1,1 +1,1 @@
-Data analysis based on bookings Rides
+Exploratory data analysis based on booking rides
