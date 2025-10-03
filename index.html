@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cab Fare Predictor</title>
+    <style>
+        /* Modern & Minimal CSS */
+        :root {
+            --primary-color: #007bff; /* A clean blue for accent */
+            --background-color: #f4f7f6;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="number"],
+        select {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #predictionResult {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            font-size: 1.1em;
+            font-weight: 500;
+            display: none; /* Initially hidden */
+        }
+        #predictionResult.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🚕 Cab Fare Predictor</h1>
+            <form id="predictionForm">
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 2;">
+                        <label for="distance">Trip Distance (km)</label>
+                        <input type="number" id="distance" required step="0.01" min="0.01" value="15.0">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="passengers">Passenger Count</label>
+                        <input type="number" id="passengers" required min="1" max="4" value="2">
+                        </div>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="timeofday">Time of Day</label>
+                        <select id="timeofday" required>
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                            <option value="Night">Night</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="dayofweek">Day of Week</label>
+                        <select id="dayofweek" required>
+                            <option value="Weekday">Weekday</option>
+                            <option value="Weekend">Weekend</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="traffic">Traffic Conditions</label>
+                        <select id="traffic" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="weather">Weather</label>
+                        <select id="weather" required>
+                            <option value="Clear">Clear</option>
+                            <option value="Rainy">Rainy</option>
+                            <option value="Snowy/Stormy">Snowy/Stormy</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="basefare">Base Fare</label>
+                        <input type="number" id="basefare" required step="0.01" min="0" value="3.50">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="duration">Trip Duration (Minutes)</label>
+                        <input type="number" id="duration" required step="0.01" min="1" value="30.0">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="kmrate">Per Km Rate</label>
+                        <input type="number" id="kmrate" required step="0.01" min="0" value="1.20">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="minuterate">Per Minute Rate</label>
+                        <input type="number" id="minuterate" required step="0.01" min="0" value="0.30">
+                    </div>
+                </div>
+
+                <button type="submit">Predict Cab Fare</button>
+            </form>
+
+            <div id="predictionResult" class="">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for form handling and prediction
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop the form from submitting normally
+            predictFare();
+        });
+
+        function predictFare() {
+            const resultDiv = document.getElementById('predictionResult');
+
+            // 1. Gather all feature values from the input fields
+            const features = {
+                Trip_Distance_km: document.getElementById('distance').value,
+                Passenger_Count: document.getElementById('passengers').value,
+                Time_of_Day: document.getElementById('timeofday').value,
+                Day_of_Week: document.getElementById('dayofweek').value,
+                Traffic_Conditions: document.getElementById('traffic').value,
+                Weather: document.getElementById('weather').value,
+                Base_Fare: document.getElementById('basefare').value,
+                Trip_Duration_Minutes: document.getElementById('duration').value,
+                Per_Km_Rate: document.getElementById('kmrate').value,
+                Per_Minute_Rate: document.getElementById('minuterate').value,
+            };
+
+            // --- IMPORTANT: Placeholder for Backend Integration ---
+            // In a real application, you would send these features to a Python backend (e.g., Flask/Django)
+            // where your Linear Regression model is loaded and run.
+
+            /*
+            fetch('/api/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(features)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const predictedFare = data.prediction.toFixed(2);
+                resultDiv.innerHTML = Predicted Fare: <strong>$${predictedFare}</strong>;
+                resultDiv.classList.add('show');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.innerHTML = 'Error: Could not connect to the model backend.';
+                resultDiv.classList.add('show');
+            });
+            */
+            
+            // --- STATIC/DEMO PREDICTION (REMOVE THIS SECTION FOR LIVE MODEL) ---
+            const predictedFareDemo = (
+                (parseFloat(features.Trip_Distance_km) * parseFloat(features.Per_Km_Rate)) +
+                (parseFloat(features.Trip_Duration_Minutes) * parseFloat(features.Per_Minute_Rate)) +
+                parseFloat(features.Base_Fare)
+            ).toFixed(2);
+
+            resultDiv.innerHTML = `
+                <p style="font-size: 1.5em; margin: 0; color: #1e7e34;">Estimated Fare: <strong>$${predictedFareDemo}</strong></p>
+                <p style="font-size: 0.8em; margin: 5px 0 0 0; color: #6c757d;">
+                    (This is a placeholder calculation. You must connect this frontend to your trained Python model using a backend framework like Flask or Django to get the real prediction.)
+                </p>
+            `;
+            resultDiv.classList.add('show');
+        }
+    </script>
+</body>
+</html>
